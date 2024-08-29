@@ -1,27 +1,30 @@
-// src/components/StartPage.tsx
-import React, { useEffect, useState } from "react";
-import "../assets/StartPage.css";
+import React from "react"
+import "../assets/StartPage.css"
 
 interface StartPageProps {
   onStart: () => void;
+  isMapLoaded: boolean;
 }
 
-const StartPage: React.FC<StartPageProps> = ({ onStart }) => {
-  const [fadeOut, setFadeOut] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setFadeOut(true);
-      setTimeout(onStart, 1000); // 1秒后调用 onStart 函数，完全隐藏开始页
-    }, 3000); // 3秒后开始淡出
-
-    return () => clearTimeout(timer);
-  }, [onStart]);
-
+const StartPage: React.FC<StartPageProps> = ({ onStart, isMapLoaded }) => {
   return (
-    <div className={`start-page ${fadeOut ? "fade-out" : ""}`}>
-      <h1 className="title">欢迎来到地图游戏</h1>
-      <div className="animation">🌍</div>
+    <div className="start-page">
+      <div className="start-page-content">
+        <div className="minecraft-loader">
+          <h1 className="title">Welcome to AnythingFun</h1>
+          <div className="animation-container">
+            <div className="map-icon">🗺️</div>
+            <div className="car-icon">🚗</div>
+            <div className="plane-icon">✈️</div>
+          </div>
+
+          {isMapLoaded && (
+            <button onClick={onStart} className="start-button">
+              Start Game
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

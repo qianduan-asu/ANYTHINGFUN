@@ -9,7 +9,7 @@ const router = express.Router();
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id);
+    const user = await User.findOne(browserId);
     if (!user) {
       return res.status(404).json({ error: "用户未找到" });
     }
@@ -66,8 +66,7 @@ router.put("/update/:id", async (req, res) => {
     const { avatar, coordinates, onlineSince } = req.body;
 
     // 查找用户并更新信息
-    const user = await User.findById(id);
-
+    const user = await User.findOne(browserId);
     if (!user) {
       return res.status(404).json({ error: "用户未找到" });
     }

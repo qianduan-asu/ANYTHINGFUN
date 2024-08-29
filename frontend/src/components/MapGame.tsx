@@ -1,14 +1,14 @@
 // src/components/Map.tsx
-import mapboxgl from "mapbox-gl";
-import React, { useEffect, useRef, useState } from "react";
+import mapboxgl from "mapbox-gl"
+import React, { useEffect, useRef, useState } from "react"
+import UserService from "../api/UserService"; // 导入UserService
+import userIcon from "../assets/icon.png"; // 导入图片
 import "../assets/Map.css"; // 引入CSS样式文件
 import MAPBOX_ACCESS_TOKEN from "../config"; // 导入配置文件中的token
+import { getBrowserFingerprint } from "../utils/fingerprint"
+import Demo from "./SetDemo"
+import StartPage from "./StartPage"
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
-import userIcon from "../assets/icon.png"; // 导入图片
-import UserService from "../api/UserService"; // 导入UserService
-import { getBrowserFingerprint } from "../utils/fingerprint";
-import useId from "@mui/material/utils/useId";
-import StartPage from "./StartPage";
 interface UserInfo {
   name: string;
   coordinates: string;
@@ -24,10 +24,8 @@ const Map: React.FC = () => {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [fingerprint, setFingerprint] = useState<string>("");
   const [isMapLoaded, setIsMapLoaded] = useState(false); // 地图是否加载完成
-  const [showStartPage, setShowStartPage] = useState(true);
-  const handleStart = () => {
-    setShowStartPage(false);
-  };
+  const [showStartPage, setShowStartPage] = useState(false);
+
   useEffect(() => {
     const initializeMap = async () => {
       const fingerprint = await getBrowserFingerprint(); // 获取指纹
@@ -102,7 +100,7 @@ const Map: React.FC = () => {
     };
 
     initializeMap();
-  }, [fingerprint]);
+  }, [fingerprint, lng, lat, zoom]);
 
   const addUserMarker = (
     longitude: number,
@@ -158,21 +156,16 @@ const Map: React.FC = () => {
     // // 添加 Popup 到 Marker
     // marker.setPopup(popup);
   };
-  const fetchFingerprint = async () => {
-    const fingerprint = await getBrowserFingerprint();
-    setFingerprint(fingerprint);
-  };
 
-  fetchFingerprint();
   return (
     <div>
-      {showStartPage ? (
-        <StartPage onStart={handleStart} />
-      ) : (
-        <div>
-          <h1>AnythingFun</h1>
-          <div ref={mapContainer} className="map-container" />
-        </div>
+      <Demo></Demo>
+      <div ref={mapContainer} className="map-container" />
+      {showStartPage && (
+        <StartPage
+          onStart={() => setShowStartPage(false)}
+          isMapLoaded={isMapLoaded}
+        />
       )}
     </div>
   );
